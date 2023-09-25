@@ -1,0 +1,143 @@
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>if</title>
+	<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/main.css">	
+	<script src="js/jquery-3.4.1.min.js"></script>
+	<script src="bootstrap/js/bootstrap.min.js"></script>
+</head>
+
+
+<body>
+
+<!--導覽列-->
+    <nav style="background:#428bca" class="navbar navbar-expand-lg navbar-light">
+        <!--導覽列的頁首-->
+        <a class="navbar-brand" href="#" style="color:white">基本概念介紹</a>
+        <!--版型縮小後的Menu-->	  
+        <button class="navbar-toggler border-light bg-light" type="button" 
+	          data-toggle="collapse" data-target="#navbarNavDropdown" 
+	          aria-controls="navbarNavDropdown" aria-expanded="false" 
+			  aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+        </button>
+		
+		<!--導覽列的項目-->
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                <li class="nav-item active">
+                    <a class="nav-link" href="start.html">首頁<span class="sr-only">(current)</span></a>
+                </li>	
+				
+                <li class="nav-item">
+                    <a class="nav-link" href="study2.html" style="color:gray"> if、if...(else if)...else </a>
+                </li>
+				
+                <li class="nav-item">
+                    <a class="nav-link" href="study3.html" style="color:white"> nested if </a>
+                </li>	
+				
+				<li class="nav-item">
+                    <a class="nav-link" href="study4.html" style="color:white"> switch case </a>
+                </li>
+				
+				<li class="nav-item">
+                    <a class="nav-link" href="study5.html" style="color:white"> conditional operator </a>
+                </li>
+				
+				<li class="nav-item">
+                    <a class="nav-link" href="test6.html" style="color:white"> 測驗 </a>
+                </li>
+            </ul>
+		</div>
+	</nav>
+
+
+<h1><font color=red><i>if、if...(else if)...else</i></font></h1>
+
+<hr>
+
+
+
+
+<h2><font color=blue>if</font> [單一選擇結構]</h2>
+
+<h3><font color=orange>語法 : </font></h3>
+
+<font size=4>
+<font color=red>
+if (條件式) { <br>
+<font color=black size=2>//條件判斷為true進入此區塊</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;陳述句; <br>
+} <br><br>
+</font>
+若陳述句只有一行的話，<br>
+可以不加大括號<br><br>
+</font>
+
+
+<hr>
+
+
+
+<a name="ex2">
+<h2><font color=blue>if...else</font> [雙重選擇結構]</h2>
+
+<h3><font color=orange>語法 : </font></h3>
+
+<font size=4>
+<font color=red>
+if (條件式) { <br>
+<font color=black size=2>//條件判斷為true進入此區塊</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;陳述句; <br>
+} <br>
+else { <br>
+<font color=black size=2>//條件判斷為false進入此區塊</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;陳述句; <br>
+} <br><br>
+</font>
+</font>
+<button onclick='window.location="study2_ex2.html";' style="background-color:green; color:white"> 範例 </button>
+
+<hr>
+
+
+
+<a name="ex3">
+<h2><font color=blue>if...else if...else</font> [多重選擇結構]</h2>
+
+<h3><font color=orange>語法 : </font></h3>
+
+<font size=4>
+<font color=red>
+if (條件式) { <br>
+<font color=black size=2>//條件判斷為true進入此區塊</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;陳述句; <br>
+} <br>
+else if (條件式) { <font color=black>//可以不只一個</font><br>
+<font color=black size=2>//條件判斷為true進入此區塊</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;陳述句; <br>
+} <br>
+else { <font color=black size=2>//放在最後一個，可省略不寫</font><br>
+<font color=black size=2>//以上條件皆不符合，進入此程式區塊</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;陳述句; <br>
+} <br><br>
+</font>
+</font>
+<button onclick='window.location="study2_ex3.html";' style="background-color:green; color:white"> 範例 </button>
+
+<hr>
+
+
+<br><br><br>
+
+<button onclick='window.location="study3.html";'> NEXT </button> nested if >>
+
+
+</body>
+
+</html>

@@ -1,0 +1,155 @@
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>測驗結果</title>
+	<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/main.css">	
+	<script src="js/jquery-3.4.1.min.js"></script>
+	<script src="bootstrap/js/bootstrap.min.js"></script>
+</head>
+
+<script>
+var wrong1 = localStorage.getItem("recordW1");
+var wrong2 = localStorage.getItem("recordW2");
+var wrong3 = localStorage.getItem("recordW3");
+var wrong4 = localStorage.getItem("recordW4");
+var ques1 = localStorage.getItem("recordQ1");
+var ques2 = localStorage.getItem("recordQ2");
+var ques3 = localStorage.getItem("recordQ3");
+var ques4 = localStorage.getItem("recordQ4");
+var ans1 = localStorage.getItem("recordA1");
+var ans2 = localStorage.getItem("recordA2");
+var ans3 = localStorage.getItem("recordA3");
+var ans4 = localStorage.getItem("recordA4");
+var sc = localStorage.getItem("s");
+
+var w = "";
+var q = "";
+var showqbtn = 0;
+
+
+function showR() {
+
+	document.getElementById('score').innerHTML = "<font size=5>總得分 : <font color=red>" + sc + "</font>分</font>";
+	
+	if (wrong1 != 0) {
+		w = w + "<br>" + "<font size=5>第一題 : if...else if...else，錯<font color=red>" + wrong1 + "</font>次</font>";
+	}
+	if (wrong2 != 0) {
+		w = w + "<br>" + "<font size=5>第二題 : nested if，錯<font color=red>" + wrong2 + "</font>次</font>";
+	}
+	if (wrong3 != 0) {
+		w = w + "<br>" + "<font size=5>第三題 : switch case，錯<font color=red>" + wrong3 + "</font>次</font>";
+	}
+	if (wrong4 != 0) {
+		w = w + "<br>" + "<font size=5>第四題 : conditional operator，錯<font color=red>" + wrong4 + "</font>次</font>";
+	}
+	
+   
+    document.getElementById('showWrong').innerHTML = "錯誤的題目類型 : <br>" + w;
+}
+
+
+
+function showQ() {
+	if (showqbtn == 0) {
+		if (wrong1 != 0) {
+			q = q + "<br>" + "<font size=3>第一題 : if...else if...else <br>" + ques1 + "</font><br><font color=red>答案 : " + ans1 + "</font><hr>";
+		}
+		if (wrong2 != 0) {
+			q = q + "<br>" + "<font size=3>第二題 : nested if <br>" + ques2 + "</font><br><font color=red>答案 : " + ans2 + "</font><hr>";
+		}
+		if (wrong3 != 0) {
+			q = q + "<br>" + "<font size=3>第三題 : switch case <br>" + ques3 + "</font><br><font color=red>答案 : " + ans3 + "</font><hr>";
+		}
+		if (wrong4 != 0) {
+			q = q + "<br>" + "<font size=3>第四題 : conditional operator <br>" + ques4 + "</font><br><font color=red>答案 : " + ans4 + "</font><hr>";
+		}
+		
+		document.getElementById('showQues').innerHTML = q;
+		showqbtn = 1;
+	}
+	else if (showqbtn == 1) {
+		q = "";
+		document.getElementById('showQues').innerHTML = "";
+		showqbtn = 0;
+	}
+}
+
+
+
+
+</script>
+
+
+
+<body onload='showR();'>
+
+
+<!--導覽列-->
+    <nav style="background:#428bca" class="navbar navbar-expand-lg navbar-light">
+        <!--導覽列的頁首-->
+        <a class="navbar-brand" href="#" style="color:white">基本概念介紹</a>
+        <!--版型縮小後的Menu-->	  
+        <button class="navbar-toggler border-light bg-light" type="button" 
+	          data-toggle="collapse" data-target="#navbarNavDropdown" 
+	          aria-controls="navbarNavDropdown" aria-expanded="false" 
+			  aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+        </button>
+		
+		<!--導覽列的項目-->
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                <li class="nav-item active">
+                    <a class="nav-link" href="start.html">首頁<span class="sr-only">(current)</span></a>
+                </li>	
+				
+                <li class="nav-item">
+                    <a class="nav-link" href="study2.html" style="color:white"> if、if...(else if)...else </a>
+                </li>
+				
+                <li class="nav-item">
+                    <a class="nav-link" href="study3.html" style="color:white"> nested if </a>
+                </li>	
+				
+				<li class="nav-item">
+                    <a class="nav-link" href="study4.html" style="color:white"> switch case </a>
+                </li>
+				
+				<li class="nav-item">
+                    <a class="nav-link" href="study5.html" style="color:white"> conditional operator </a>
+                </li>
+				
+				<li class="nav-item">
+                    <a class="nav-link" href="test6.html" style="color:white"> 測驗 </a>
+                </li>
+            </ul>
+		</div>
+	</nav>
+
+
+
+<h1><font color=red>結果</font></h1>
+
+<hr>
+
+<p id='showRole'></p>
+
+<p id='score'></p>
+
+<p id='showWrong'></p>
+
+
+<button onclick='showQ();'> 顯示錯誤的題目內容 </button><br><br>
+<p id='showQues'></p>
+
+
+<br><br><br>
+
+</body>
+
+</html>

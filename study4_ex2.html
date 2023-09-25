@@ -1,0 +1,736 @@
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/main.css">	
+	<script src="js/jquery-3.4.1.min.js"></script>
+	<script src="bootstrap/js/bootstrap.min.js"></script>
+</head>
+
+<script>
+var score = 90;
+var ans = "";
+var stepid = ['s0', 's1', 's2', 's3', 's4', 's5', 's6', 's7', 's8', 's9', 's10', 's11', 's12'];
+var codeid = ['c0', 'c1', 'c2', 'c3', 'c4', 'c5', 'c6', 'c7', 'c8', 'c9', 'c10', 'c11', 'c12'];
+var rateid = ['speed1', 'speed2', 'speed3'];
+var ctx;
+var flowWord = ['設定變數', 'score = 90', '進入switch', 'case 10 (score / 10 == 10)', 'case 9 (score / 10 == 9)', '輸出"A"', 'break', 'case 8 (score / 10 == 8)', 'case 7 (score / 10 == 7)', '輸出"B"', 'break', 'default (皆不符合)', '輸出"C"'];
+
+var nowStep = -1;
+var timerId;
+var rate = 1;
+
+
+
+
+//畫圖
+function init() {
+	var c = document.getElementById("cs1");
+	ctx = c.getContext("2d");
+	ctx.scale(2, 2);
+	ctx.font = "8px Arial";
+	ctx.textAlign = 'center';
+	
+	ctx.beginPath();
+	ctx.moveTo(110, 10);
+	ctx.lineTo(110, 20);
+	ctx.moveTo(110, 35);
+	ctx.lineTo(110, 45);
+	ctx.moveTo(110, 60);
+	ctx.lineTo(110, 70);
+	ctx.moveTo(110, 85);
+	ctx.lineTo(110, 95);
+	ctx.moveTo(110, 110);
+	ctx.lineTo(110, 120);
+	ctx.moveTo(110, 135);
+	ctx.lineTo(110, 150);
+	ctx.moveTo(110, 165);
+	ctx.lineTo(110, 175);
+	ctx.moveTo(110, 190);
+	ctx.lineTo(110, 200);
+	ctx.moveTo(110, 215);
+	ctx.lineTo(110, 235);
+	ctx.stroke();
+	ctx.closePath();
+	
+	for (var i = 0; i < 13; i++) {
+		if (i == 3) {
+			ctx.beginPath();
+			ctx.moveTo(110, 95);
+			ctx.lineTo(195, 102.5);
+			ctx.lineTo(110, 110);
+			ctx.lineTo(25, 102.5);
+			ctx.closePath();
+			ctx.stroke();
+			ctx.fillText(flowWord[i], 110, 105);
+		}
+		else if (i == 4) {
+			ctx.beginPath();
+			ctx.moveTo(110, 120);
+			ctx.lineTo(195, 127.5);
+			ctx.lineTo(110, 135);
+			ctx.lineTo(25, 127.5);
+			ctx.closePath();
+			ctx.stroke();
+			ctx.fillText(flowWord[i], 110, 130);
+		}
+		else if (i == 5) {
+			ctx.strokeRect(285, 107.5, 100, 15);
+			ctx.fillText(flowWord[i], 335, 117.5);
+		}
+		else if (i == 6) {
+			ctx.strokeRect(430, 107.5, 100, 15);
+			ctx.fillText(flowWord[i], 480, 117.5);
+		}
+		else if (i == 7) {
+			ctx.beginPath();
+			ctx.moveTo(110, 150);
+			ctx.lineTo(195, 157.5);
+			ctx.lineTo(110, 165);
+			ctx.lineTo(25, 157.5);
+			ctx.closePath();
+			ctx.stroke();
+			ctx.fillText(flowWord[i], 110, 160);
+		}
+		else if (i == 8) {
+			ctx.beginPath();
+			ctx.moveTo(110, 175);
+			ctx.lineTo(195, 182.5);
+			ctx.lineTo(110, 190);
+			ctx.lineTo(25, 182.5);
+			ctx.closePath();
+			ctx.stroke();
+			ctx.fillText(flowWord[i], 110, 185);
+		}
+		else if (i == 9) {
+			ctx.strokeRect(285, 162.5, 100, 15);
+			ctx.fillText(flowWord[i], 335, 172.5);
+		}
+		else if (i == 10) {
+			ctx.strokeRect(430, 162.5, 100, 15);
+			ctx.fillText(flowWord[i], 480, 172.5);
+		}
+		else if (i == 11) {
+			ctx.beginPath();
+			ctx.moveTo(110, 200);
+			ctx.lineTo(195, 207.5);
+			ctx.lineTo(110, 215);
+			ctx.lineTo(25, 207.5);
+			ctx.closePath();
+			ctx.stroke();
+			ctx.fillText(flowWord[i], 110, 210);
+		}
+		else if (i == 12) {
+			ctx.strokeRect(285, 200, 100, 15);
+			ctx.fillText(flowWord[i], 335, 210);
+		}
+		else {
+			ctx.strokeRect(60, 20+i*25, 100, 15);
+			ctx.fillText(flowWord[i], 110, 30+i*25);
+		}
+	}
+	ctx.beginPath();
+	ctx.moveTo(195, 102.5);
+	ctx.lineTo(250, 102.5);
+	ctx.lineTo(250, 127.5);
+	ctx.lineTo(195, 127.5);
+	ctx.moveTo(250, 115);
+	ctx.lineTo(285, 115);
+	ctx.moveTo(385, 115);
+	ctx.lineTo(430, 115);
+	ctx.moveTo(530, 115);
+	ctx.lineTo(550, 115);
+	
+	ctx.moveTo(195, 157.5);
+	ctx.lineTo(250, 157.5);
+	ctx.lineTo(250, 182.5);
+	ctx.lineTo(195, 182.5);
+	ctx.moveTo(250, 170);
+	ctx.lineTo(285, 170);
+	ctx.moveTo(385, 170);
+	ctx.lineTo(430, 170);
+	ctx.moveTo(530, 170);
+	ctx.lineTo(550, 170);
+	
+	ctx.moveTo(195, 207.5);
+	ctx.lineTo(285, 207.5);
+	ctx.moveTo(385, 207.5);
+	ctx.lineTo(550, 207.5);
+	
+	ctx.moveTo(550, 115);
+	ctx.lineTo(550, 225);
+	ctx.lineTo(110, 225);
+	
+	ctx.stroke();
+	ctx.closePath();
+	
+	ctx.fillText("true", 205, 100);
+	ctx.fillText("true", 205, 125);
+	ctx.fillText("true", 205, 155);
+	ctx.fillText("true", 205, 180);
+	ctx.fillText("false", 120, 117);
+	ctx.fillText("false", 120, 142);
+	ctx.fillText("false", 120, 172);
+	ctx.fillText("false", 120, 197);
+}
+
+
+
+
+//答案
+function ansN() {
+	score = parseInt(document.getElementById('num1').value);
+	
+	switch (parseInt(score / 10)) {
+	case 10: 
+	case 9:
+		ans = "A";
+		break;
+	case 8:
+	case 7:
+		ans = "B";
+		break;
+	default:
+		ans = "C";
+	}
+	
+	document.getElementById('outp').innerHTML = ans;
+}
+
+
+
+//取得速度
+function getspeed() {
+	for (var i = 0; i <= 2; i++) {
+		if (document.getElementById(rateid[i]).checked)
+			rate = parseInt(document.getElementById(rateid[i]).value);
+	}
+}
+
+
+
+//計時器開始
+function startTimer() {
+	ansN();
+	document.getElementById('b2').disabled = true;
+	timerId = window.setInterval("autoshow();", rate*1000);
+}
+
+
+
+//計時器清除
+function resetTimer() {
+	window.clearInterval(timerId);  
+	rate = 1;
+}
+
+
+
+//顯示
+function stepShow() {
+	if (nowStep == codeid.length)
+		wordColor(nowStep - 1, -1);
+	else if (nowStep == -1) {
+		wordColor(-1, 0);
+		nowStep = 0;
+	}
+	else
+		wordColor(nowStep - 1, nowStep);
+		
+	if (nowStep < 13){
+		wordColor(nowStep - 1, nowStep);
+		switch (nowStep) {
+		case 3 :
+			if (parseInt(score / 10) == 10) nowStep = 5;
+			else nowStep = 4;
+			break;
+		case 4 :
+			if (parseInt(score / 10) == 9) nowStep = 5;
+			else nowStep = 7;
+			break;
+		case 6 : 
+			nowStep = 13;
+			break;
+		case 7 :
+			wordColor(4, nowStep);
+			if (parseInt(score / 10) == 8) nowStep = 9;
+			else nowStep = 8;
+			break;
+		case 8 :
+			if (parseInt(score / 10) == 7) nowStep = 9;
+			else nowStep = 11;
+			break;
+		case 10 : 
+			nowStep = 13;
+			break;
+		case 11 :
+			wordColor(8, nowStep);
+			nowStep = 12;
+			break;
+		case 5:
+		case 9:
+			clearAllColor();
+			wordColor(-1, nowStep);
+			nowStep++;
+			break;
+		default :
+			nowStep++;
+		}
+	}
+}
+
+
+
+//自動
+function autoshow() {
+	if (nowStep < codeid.length)
+		stepShow();
+	else {
+		resetTimer();
+		clearAll();
+	}
+}
+
+
+
+//逐步
+function startStep() {
+	window.clearInterval(timerId);  
+	clearAllColor();
+	ansN();
+	
+	document.getElementById('b2').disabled = true;
+	
+	stepShow();
+	
+	if (nowStep == codeid.length)
+		document.getElementById('b3').disabled = true;
+}
+
+
+
+//文字顏色
+function wordColor(pre,current) {
+	if (pre != -1) { 
+		clearColor(pre);
+		document.getElementById(stepid[pre]).style.color = "black";
+		document.getElementById(stepid[pre]).style.background = "white";  
+		document.getElementById(codeid[pre]).style.color = "black";
+		document.getElementById(codeid[pre]).style.background = "white"; 
+	}
+	if (current != -1) { 
+		drawColor(current);
+		document.getElementById(stepid[current]).style.color = "red";
+		document.getElementById(stepid[current]).style.background = "yellow"; 
+		document.getElementById(codeid[current]).style.color = "red";
+		document.getElementById(codeid[current]).style.background = "yellow";    
+	}
+}
+
+
+
+
+//畫上畫布顏色
+function drawColor(n) {
+	if (n == 1) {
+		ctx.fillStyle = 'yellow';
+		ctx.fillRect(61, 21+n*25, 98, 13);
+		ctx.fillStyle = 'red';
+		ctx.fillText("score = "+ score, 110, 30+n*25);
+	}
+	else if (n == 3) {
+		ctx.fillStyle = 'yellow';
+		ctx.beginPath();
+		ctx.moveTo(110, 96);
+		ctx.lineTo(190, 102.5);
+		ctx.lineTo(110, 109);
+		ctx.lineTo(30, 102.5);
+		ctx.closePath();
+		ctx.fill();
+		ctx.fillStyle = 'red';
+		ctx.fillText(flowWord[n], 110, 105);
+	}
+	else if (n == 4) {
+		ctx.fillStyle = 'yellow';
+		ctx.beginPath();
+		ctx.moveTo(110, 121);
+		ctx.lineTo(190, 127.5);
+		ctx.lineTo(110, 134);
+		ctx.lineTo(30, 127.5);
+		ctx.closePath();
+		ctx.fill();
+		ctx.fillStyle = 'red';
+		ctx.fillText(flowWord[n], 110, 130);
+	}
+	else if (n == 5) {
+		ctx.fillStyle = 'yellow';
+		ctx.fillRect(286, 108.5, 98, 13);
+		ctx.fillStyle = 'red';
+		ctx.fillText(flowWord[n], 335, 117.5);
+	}
+	else if (n == 6) {
+		ctx.fillStyle = 'yellow';
+		ctx.fillRect(431, 108.5, 98, 13);
+		ctx.fillStyle = 'red';
+		ctx.fillText(flowWord[n], 480, 117.5);
+	}
+	else if (n == 7) {
+		ctx.fillStyle = 'yellow';
+		ctx.beginPath();
+		ctx.moveTo(110, 151);
+		ctx.lineTo(190, 157.5);
+		ctx.lineTo(110, 164);
+		ctx.lineTo(30, 157.5);
+		ctx.closePath();
+		ctx.fill();
+		ctx.fillStyle = 'red';
+		ctx.fillText(flowWord[n], 110, 160);
+	}
+	else if (n == 8) {
+		ctx.fillStyle = 'yellow';
+		ctx.beginPath();
+		ctx.moveTo(110, 176);
+		ctx.lineTo(190, 182.5);
+		ctx.lineTo(110, 189);
+		ctx.lineTo(30, 182.5);
+		ctx.closePath();
+		ctx.fill();
+		ctx.fillStyle = 'red';
+		ctx.fillText(flowWord[n], 110, 185);
+	}
+	else if (n == 9) {
+		ctx.fillStyle = 'yellow';
+		ctx.fillRect(286, 163.5, 98, 13);
+		ctx.fillStyle = 'red';
+		ctx.fillText(flowWord[n], 335, 172.5);
+	}
+	else if (n == 10) {
+		ctx.fillStyle = 'yellow';
+		ctx.fillRect(431, 163.5, 98, 13);
+		ctx.fillStyle = 'red';
+		ctx.fillText(flowWord[n], 480, 172.5);
+	}
+	else if (n == 11) {
+		ctx.fillStyle = 'yellow';
+		ctx.beginPath();
+		ctx.moveTo(110, 201);
+		ctx.lineTo(190, 207.5);
+		ctx.lineTo(110, 214);
+		ctx.lineTo(30, 207.5);
+		ctx.closePath();
+		ctx.fill();
+		ctx.fillStyle = 'red';
+		ctx.fillText(flowWord[n], 110, 210);
+	}
+	else if (n == 12) {
+		ctx.fillStyle = 'yellow';
+		ctx.fillRect(286, 201, 98, 13);
+		ctx.fillStyle = 'red';
+		ctx.fillText(flowWord[n], 335, 210);
+	}
+	else {
+		ctx.fillStyle = 'yellow';
+		ctx.fillRect(61, 21+n*25, 98, 13);
+		ctx.fillStyle = 'red';
+		ctx.fillText(flowWord[n], 110, 30+n*25);
+	}
+}
+
+
+
+
+//清除畫布顏色
+function clearColor(n) {
+	if (n == 1) {
+		ctx.fillStyle = 'black';
+		ctx.clearRect(61, 21+n*25, 98, 13);
+		ctx.fillText("score = "+ score, 110, 30+n*25);
+	}
+	else if (n == 3) {
+		ctx.fillStyle = 'white';
+		ctx.beginPath();
+		ctx.moveTo(110, 96);
+		ctx.lineTo(190, 102.5);
+		ctx.lineTo(110, 109);
+		ctx.lineTo(30, 102.5);
+		ctx.closePath();
+		ctx.fill();
+		ctx.fillStyle = 'black';
+		ctx.fillText(flowWord[n], 110, 105);
+	}
+	else if (n == 4) {
+		ctx.fillStyle = 'white';
+		ctx.beginPath();
+		ctx.moveTo(110, 121);
+		ctx.lineTo(190, 127.5);
+		ctx.lineTo(110, 134);
+		ctx.lineTo(30, 127.5);
+		ctx.closePath();
+		ctx.fill();
+		ctx.fillStyle = 'black';
+		ctx.fillText(flowWord[n], 110, 130);
+	}
+	else if (n == 5) {
+		ctx.fillStyle = 'black';
+		ctx.clearRect(286, 108.5, 98, 13);
+		ctx.fillText(flowWord[n], 335, 117.5);
+	}
+	else if (n == 6) {
+		ctx.fillStyle = 'black';
+		ctx.clearRect(431, 108.5, 98, 13);
+		ctx.fillText(flowWord[n], 480, 117.5);
+	}
+	else if (n == 7) {
+		ctx.fillStyle = 'white';
+		ctx.beginPath();
+		ctx.moveTo(110, 151);
+		ctx.lineTo(190, 157.5);
+		ctx.lineTo(110, 164);
+		ctx.lineTo(30, 157.5);
+		ctx.closePath();
+		ctx.fill();
+		ctx.fillStyle = 'black';
+		ctx.fillText(flowWord[n], 110, 160);
+	}
+	else if (n == 8) {
+		ctx.fillStyle = 'white';
+		ctx.beginPath();
+		ctx.moveTo(110, 176);
+		ctx.lineTo(190, 182.5);
+		ctx.lineTo(110, 189);
+		ctx.lineTo(30, 182.5);
+		ctx.closePath();
+		ctx.fill();
+		ctx.fillStyle = 'black';
+		ctx.fillText(flowWord[n], 110, 185);
+	}
+	else if (n == 9) {
+		ctx.fillStyle = 'black';
+		ctx.clearRect(286, 163.5, 98, 13);
+		ctx.fillText(flowWord[n], 335, 172.5);
+	}
+	else if (n == 10) {
+		ctx.fillStyle = 'black';
+		ctx.clearRect(431, 163.5, 98, 13);
+		ctx.fillText(flowWord[n], 480, 172.5);
+	}
+	else if (n == 11) {
+		ctx.fillStyle = 'white';
+		ctx.beginPath();
+		ctx.moveTo(110, 201);
+		ctx.lineTo(190, 207.5);
+		ctx.lineTo(110, 214);
+		ctx.lineTo(30, 207.5);
+		ctx.closePath();
+		ctx.fill();
+		ctx.fillStyle = 'black';
+		ctx.fillText(flowWord[n], 110, 210);
+	}
+	else if (n == 12) {
+		ctx.fillStyle = 'black';
+		ctx.clearRect(286, 201, 98, 13);
+		ctx.fillText(flowWord[n], 335, 210);
+	}
+	else {
+		ctx.fillStyle = 'black';
+		ctx.clearRect(61, 21+n*25, 98, 13);
+		ctx.fillText(flowWord[n], 110, 30+n*25);
+	}
+}
+
+
+
+
+//清除全部顏色
+function clearAllColor() {
+	for (var n = 0; n < 13; n++) {
+		clearColor(n);
+		document.getElementById(stepid[n]).style.color = "black";
+		document.getElementById(stepid[n]).style.background = "white";  
+		document.getElementById(codeid[n]).style.color = "black";
+		document.getElementById(codeid[n]).style.background = "white"; 
+	}
+}
+
+
+
+//清除
+function clearAll() {
+	document.getElementById('b2').disabled = false;
+	document.getElementById('b3').disabled = false;
+	
+	document.getElementById('outp').innerHTML = "";
+	
+	nowStep = -1;
+	rate = 1;
+	document.getElementById('speed1').checked = true;
+	score = 90;
+	document.getElementById('num1').value = score;
+	clearAllColor();
+	resetTimer();
+}
+
+
+
+
+</script>
+
+
+
+<body onload='init()'>
+
+
+<!--導覽列-->
+    <nav style="background:#bca428" class="navbar navbar-expand-lg navbar-light">
+        <!--導覽列的頁首-->
+        <a class="navbar-brand" href="#" style="color:white">範例</a>
+        <!--版型縮小後的Menu-->	  
+        <button class="navbar-toggler border-light bg-light" type="button" 
+	          data-toggle="collapse" data-target="#navbarNavDropdown" 
+	          aria-controls="navbarNavDropdown" aria-expanded="false" 
+			  aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+        </button>
+		
+		<!--導覽列的項目-->
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                <li class="nav-item active">
+                    <a class="nav-link" href="start.html">首頁<span class="sr-only">(current)</span></a>
+                </li>	
+				
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color:white">if</a>
+					<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+						<a class="dropdown-item" href="study2_ex2.html">奇偶數</a>
+						<a class="dropdown-item" href="study2_ex1.html">長方形/正方形判斷</a>
+						<a class="dropdown-item" href="study2_ex3.html">等第</a>
+						<a class="dropdown-item" href="study2_ex4.html">兩數比大小</a>
+						<div class="dropdown-divider"></div>
+						<a class="dropdown-item" href="study2.html">基本概念介紹</a>
+					</div>
+                </li>
+				
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color:white">nested if</a>
+					<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+						<a class="dropdown-item" href="study3_ex1.html">三個相異數比大小</a>
+						<div class="dropdown-divider"></div>
+						<a class="dropdown-item" href="study3.html">基本概念介紹</a>
+					</div>
+                </li>	
+				
+				<li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color:white">switch case</a>
+					<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+						<a class="dropdown-item" href="study4_ex1.html">兩數比大小</a>
+						<a class="dropdown-item" href="study4_ex2.html">等第</a>
+						<div class="dropdown-divider"></div>
+						<a class="dropdown-item" href="study4.html">基本概念介紹</a>
+					</div>
+                </li>
+				
+				<li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color:white">conditional operator</a>
+					<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+						<a class="dropdown-item" href="study5_ex2.html">奇偶數</a>
+						<a class="dropdown-item" href="study5_ex1.html">長方形/正方形判斷</a>
+						<div class="dropdown-divider"></div>
+						<a class="dropdown-item" href="study5.html">基本概念介紹</a>
+					</div>
+                </li>
+            </ul>
+		</div>
+	</nav>
+
+
+
+
+<h1>範例 : switch case</h1>
+<h4>分數等第 : <a href=study2_ex3.html>[if...else if...else]</a> <font color=gray>[switch case]</font></h4>
+
+<table border=1 cellpadding = 10>
+
+<tr><th>說明</th><th>程式碼</th><th>流程圖</th><th>輸出&nbsp;&nbsp;&nbsp;&nbsp;</th></tr>
+<tr>
+<td>
+<span id=s0>宣告變數score</span><br> 
+<span id=s1>設定score的值</span><br>
+<span id=s2>進入switch</span><br>
+<span id=s3>若 score / 10 == 10</span><br>
+<span id=s4>若 score / 10 == 9</span><br>
+<span id=s5>輸出 : A</span><br>
+<span id=s6>跳出switch</span><br>
+<span id=s7>若 score / 10 == 8</span><br>
+<span id=s8>若 score / 10 == 7</span><br>
+<span id=s9>輸出 : B</span><br>
+<span id=s10>跳出switch</span><br>
+<span id=s11>若皆不符合</span><br>
+<span id=s12>輸出 : C</span><br>
+</td>
+
+<td>
+<span id=c0>int score;</span><br>
+<span id=c1>score = </span><input type=text id='num1' size=3 value=90>;<br>
+<span id=c2>switch (score / 10)</span> {<br>
+<span id=c3>case 10 : </span><br>
+<span id=c4>case 9 : </span><br>
+<span id=c5>&nbsp;&nbsp;&nbsp;&nbsp; printf("A"); </span><br>
+<span id=c6>&nbsp;&nbsp;&nbsp;&nbsp; break; </span><br>
+<span id=c7>case 8 : </span><br>
+<span id=c8>case 7 : </span><br>
+<span id=c9>&nbsp;&nbsp;&nbsp;&nbsp; printf("B"); </span><br>
+<span id=c10>&nbsp;&nbsp;&nbsp;&nbsp; break; </span><br>
+<span id=c11>default : </span><br>
+<span id=c12>&nbsp;&nbsp;&nbsp;&nbsp; printf("C"); </span><br>}
+</td>
+
+
+<td>
+<canvas id='cs1' width='1150' height='500'></canvas>
+</td>
+
+<td>
+<font size=5 color=red>
+<span id=outp></span>
+</font>
+</td>
+
+
+</tr>
+
+</table>
+
+
+<p>請選擇速度 : 
+<input type="radio" id="speed1" name="rate" value="1" checked > 快(1秒) 
+<input type="radio" id="speed2" name="rate" value="3"> 中(3秒) 
+<input type="radio" id="speed3" name="rate" value="5"> 慢(5秒) 
+<button onclick="getspeed();" id='b1'> 選擇速度 </button>
+</p>
+
+
+
+<button onclick="startTimer();" id='b2'> 自動播放 (animation) </button>
+<button onclick="startStep();" id='b3'> 逐步 (step by step) </button>
+<button onclick="clearAll();" id='b4'> 清除 (clear all) </button>
+
+
+
+
+<br><br><br>
+<button onclick='window.location="study2.html#ex3";'> 回上頁 (基本概念介紹) </button>
+
+
+
+</body>
+
+
+
+
+
+
+</html>

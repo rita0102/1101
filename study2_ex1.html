@@ -1,0 +1,497 @@
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/main.css">	
+	<script src="js/jquery-3.4.1.min.js"></script>
+	<script src="bootstrap/js/bootstrap.min.js"></script>
+</head>
+
+<script>
+var width = 10, height = 10;
+var ans = "";
+var stepid = ['s0', 's1', 's2', 's3', 's4', 's5', 's6'];
+var codeid = ['c0', 'c1', 'c2', 'c3', 'c4', 'c5', 'c6'];
+var rateid = ['speed1', 'speed2', 'speed3'];
+var ctx;
+var flowWord = ['設定變數', 'width = 10', 'height = 10', '判斷 width 是否等於 height', 'judge = "正方形"', 'judge = "長方形"', '輸出 judge'];
+
+var nowStep = -1;
+var timerId;
+var rate = 1;
+
+
+
+
+//畫圖
+function init() {
+var c = document.getElementById("cs1");
+	ctx = c.getContext("2d");
+	ctx.scale(2, 2);
+	ctx.font = "8px Arial";
+	ctx.textAlign = 'center';
+	
+	ctx.beginPath();
+	ctx.moveTo(110, 10);
+	ctx.lineTo(110, 20);
+	ctx.stroke();
+	ctx.closePath();
+	
+	for (var i = 0; i < 7; i++) {
+		ctx.beginPath();
+		ctx.moveTo(110, 35+i*25);
+		ctx.lineTo(110, 45+i*25);
+		ctx.stroke();
+		ctx.closePath();
+		
+		if (i == 3) {
+			ctx.beginPath();
+			ctx.moveTo(110, 95);
+			ctx.lineTo(195, 102.5);
+			ctx.lineTo(110, 110);
+			ctx.lineTo(25, 102.5);
+			ctx.closePath();
+			ctx.stroke();
+			ctx.fillText(flowWord[i], 110, 105);
+		}
+		else if (i == 4) {
+			ctx.strokeRect(60, 120, 100, 15);
+			ctx.fillText(flowWord[i], 110, 130);
+		}
+		else if (i == 5) {
+			ctx.strokeRect(210, 120, 100, 15);
+			ctx.fillText(flowWord[i], 260, 130);
+		}
+		else if (i == 6) {
+			ctx.strokeRect(60, 170, 100, 15);
+			ctx.fillText(flowWord[i], 110, 180);
+		}
+		else {
+			ctx.strokeRect(60, 20+i*25, 100, 15);
+			ctx.fillText(flowWord[i], 110, 30+i*25);
+		}
+	}
+	ctx.beginPath();
+	ctx.moveTo(195, 102.5);
+	ctx.lineTo(260, 102.5);
+	ctx.lineTo(260, 120);
+	ctx.moveTo(260, 135);
+	ctx.lineTo(260, 150);
+	ctx.lineTo(110, 150);
+	ctx.moveTo(110, 145);
+	ctx.lineTo(110, 160);
+	ctx.stroke();
+	ctx.closePath();
+	ctx.fillText("false", 205, 100);
+	ctx.fillText("true", 100, 117);
+}
+
+
+
+
+//答案
+function ansN() {
+	width = parseInt(document.getElementById('num1').value);
+	height = parseInt(document.getElementById('num2').value);
+	
+	if (width == height) ans = "正方形";
+	else ans = "長方形";
+
+	document.getElementById('outp').innerHTML = ans;
+}
+
+
+
+//取得速度
+function getspeed() {
+	for (var i = 0; i <= 2; i++) {
+		if (document.getElementById(rateid[i]).checked)
+			rate = parseInt(document.getElementById(rateid[i]).value);
+	}
+}
+
+
+
+//計時器開始
+function startTimer() {
+	ansN();
+	document.getElementById('b2').disabled = true;
+	timerId = window.setInterval("autoshow();", rate*1000);
+}
+
+
+
+//計時器清除
+function resetTimer() {
+	window.clearInterval(timerId);  
+	rate = 1;
+}
+
+
+
+//顯示
+function stepShow() {
+	if (nowStep == codeid.length)
+		wordColor(nowStep - 1, -1);
+	else if (nowStep == -1) {
+		wordColor(-1, 0);
+		nowStep = 0;
+	}
+	else
+		wordColor(nowStep - 1, nowStep);
+		
+	if (nowStep < 7) {
+		wordColor(nowStep - 1, nowStep);
+		switch (nowStep) {
+		case 3:
+			if (width == height) nowStep = 4;
+			else nowStep = 5;
+			break;
+		case 4:
+			nowStep = 6;
+			break;
+		case 5:
+			wordColor(nowStep - 2, nowStep);
+			nowStep = 6;
+			break;
+		case 6:
+			clearAllColor();
+			wordColor(-1, 6);
+		default:
+			nowStep++;
+		}
+	}
+}
+
+
+
+//自動
+function autoshow() {
+	if (nowStep < codeid.length)
+		stepShow();
+	else {
+		resetTimer();
+		clearAll();
+	}
+}
+
+
+
+//逐步
+function startStep() {
+	window.clearInterval(timerId);  
+	clearAllColor();
+	ansN();
+	
+	document.getElementById('b2').disabled = true;
+	
+	stepShow();
+	
+	if (nowStep == codeid.length)
+		document.getElementById('b3').disabled = true;
+}
+
+
+
+//文字顏色
+function wordColor(pre,current) {
+	if (pre != -1) { 
+		clearColor(pre);
+		document.getElementById(stepid[pre]).style.color = "black";
+		document.getElementById(stepid[pre]).style.background = "white";  
+		document.getElementById(codeid[pre]).style.color = "black";
+		document.getElementById(codeid[pre]).style.background = "white"; 
+	}
+	if (current != -1) { 
+		drawColor(current);
+		document.getElementById(stepid[current]).style.color = "red";
+		document.getElementById(stepid[current]).style.background = "yellow"; 
+		document.getElementById(codeid[current]).style.color = "red";
+		document.getElementById(codeid[current]).style.background = "yellow";    
+	}
+}
+
+
+
+
+//畫上畫布顏色
+function drawColor(n) {
+	if (n == 1) {
+		ctx.fillStyle = 'yellow';
+		ctx.fillRect(61, 21+n*25, 98, 13);
+		ctx.fillStyle = 'red';
+		ctx.fillText("width = "+ width, 110, 30+n*25);
+	}
+	else if (n == 2) {
+		ctx.fillStyle = 'yellow';
+		ctx.fillRect(61, 21+n*25, 98, 13);
+		ctx.fillStyle = 'red';
+		ctx.fillText("height = "+ height, 110, 30+n*25);
+	}
+	else if (n == 3) {
+		ctx.fillStyle = 'yellow';
+		ctx.beginPath();
+		ctx.moveTo(110, 96);
+		ctx.lineTo(190, 102.5);
+		ctx.lineTo(110, 109);
+		ctx.lineTo(30, 102.5);
+		ctx.closePath();
+		ctx.fill();
+		ctx.fillStyle = 'red';
+		ctx.fillText(flowWord[n], 110, 105);
+	}
+	else if (n == 4) {
+		ctx.fillStyle = 'yellow';
+		ctx.fillRect(61, 121, 98, 13);
+		ctx.fillStyle = 'red';
+		ctx.fillText(flowWord[n], 110, 130);
+	}
+	else if (n == 5) {
+		ctx.fillStyle = 'yellow';
+		ctx.fillRect(211, 121, 98, 13);
+		ctx.fillStyle = 'red';
+		ctx.fillText(flowWord[n], 260, 130);
+	}
+	else if (n == 6) {
+		ctx.fillStyle = 'yellow';
+		ctx.fillRect(61, 171, 98, 13);
+		ctx.fillStyle = 'red';
+		ctx.fillText(flowWord[n], 110, 180);
+	}
+	else {
+		ctx.fillStyle = 'yellow';
+		ctx.fillRect(61, 21+n*25, 98, 13);
+		ctx.fillStyle = 'red';
+		ctx.fillText(flowWord[n], 110, 30+n*25);
+	}
+}
+
+
+
+
+//清除畫布顏色
+function clearColor(n) {
+	if (n == 1) {
+		ctx.fillStyle = 'black';
+		ctx.clearRect(61, 21+n*25, 98, 13);
+		ctx.fillText("width = "+ width, 110, 30+n*25);
+	}
+	else if (n == 2) {
+		ctx.fillStyle = 'black';
+		ctx.clearRect(61, 21+n*25, 98, 13);
+		ctx.fillText("height = "+ height, 110, 30+n*25);
+	}
+	else if (n == 3) {
+		ctx.fillStyle = 'white';
+		ctx.beginPath();
+		ctx.moveTo(110, 96);
+		ctx.lineTo(190, 102.5);
+		ctx.lineTo(110, 109);
+		ctx.lineTo(30, 102.5);
+		ctx.closePath();
+		ctx.fill();
+		ctx.fillStyle = 'black';
+		ctx.fillText(flowWord[n], 110, 105);
+	}
+	else if (n == 4) {
+		ctx.fillStyle = 'black';
+		ctx.clearRect(61, 121, 98, 13);
+		ctx.fillText(flowWord[n], 110, 130);
+	}
+	else if (n == 5) {
+		ctx.fillStyle = 'black';
+		ctx.clearRect(211, 121, 98, 13);
+		ctx.fillText(flowWord[n], 260, 130);
+	}
+	else if (n == 6) {
+		ctx.fillStyle = 'black';
+		ctx.clearRect(61, 171, 98, 13);
+		ctx.fillText(flowWord[n], 110, 180);
+	}
+	else {
+		ctx.fillStyle = 'black';
+		ctx.clearRect(61, 21+n*25, 98, 13);
+		ctx.fillText(flowWord[n], 110, 30+n*25);
+	}
+}
+
+
+
+
+//清除全部顏色
+function clearAllColor() {
+	for (var n = 0; n < 7; n++) {
+		clearColor(n);
+		document.getElementById(stepid[n]).style.color = "black";
+		document.getElementById(stepid[n]).style.background = "white";  
+		document.getElementById(codeid[n]).style.color = "black";
+		document.getElementById(codeid[n]).style.background = "white"; 
+	}
+}
+
+
+
+//清除
+function clearAll() {
+	document.getElementById('b2').disabled = false;
+	document.getElementById('b3').disabled = false;
+	
+	document.getElementById('outp').innerHTML = "";
+	
+	nowStep = -1;
+	rate = 1;
+	document.getElementById('speed1').checked = true;
+	width = 10, height = 10;
+	document.getElementById('num1').value = width;
+	document.getElementById('num2').value = height;
+	clearAllColor();
+	resetTimer();
+}
+
+
+
+</script>
+
+
+
+<body onload='init()'>
+
+<!--導覽列-->
+    <nav style="background:#bca428" class="navbar navbar-expand-lg navbar-light">
+        <!--導覽列的頁首-->
+        <a class="navbar-brand" href="#" style="color:white">範例</a>
+        <!--版型縮小後的Menu-->	  
+        <button class="navbar-toggler border-light bg-light" type="button" 
+	          data-toggle="collapse" data-target="#navbarNavDropdown" 
+	          aria-controls="navbarNavDropdown" aria-expanded="false" 
+			  aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+        </button>
+		
+		<!--導覽列的項目-->
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                <li class="nav-item active">
+                    <a class="nav-link" href="start.html">首頁<span class="sr-only">(current)</span></a>
+                </li>	
+				
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color:white">if</a>
+					<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+						<a class="dropdown-item" href="study2_ex2.html">奇偶數</a>
+						<a class="dropdown-item" href="study2_ex1.html">長方形/正方形判斷</a>
+						<a class="dropdown-item" href="study2_ex3.html">等第</a>
+						<a class="dropdown-item" href="study2_ex4.html">兩數比大小</a>
+						<div class="dropdown-divider"></div>
+						<a class="dropdown-item" href="study2.html">基本概念介紹</a>
+					</div>
+                </li>
+				
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color:white">nested if</a>
+					<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+						<a class="dropdown-item" href="study3_ex1.html">三個相異數比大小</a>
+						<div class="dropdown-divider"></div>
+						<a class="dropdown-item" href="study3.html">基本概念介紹</a>
+					</div>
+                </li>	
+				
+				<li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color:white">switch case</a>
+					<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+						<a class="dropdown-item" href="study4_ex1.html">兩數比大小</a>
+						<a class="dropdown-item" href="study4_ex2.html">等第</a>
+						<div class="dropdown-divider"></div>
+						<a class="dropdown-item" href="study4.html">基本概念介紹</a>
+					</div>
+                </li>
+				
+				<li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color:white">conditional operator</a>
+					<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+						<a class="dropdown-item" href="study5_ex2.html">奇偶數</a>
+						<a class="dropdown-item" href="study5_ex1.html">長方形/正方形判斷</a>
+						<div class="dropdown-divider"></div>
+						<a class="dropdown-item" href="study5.html">基本概念介紹</a>
+					</div>
+                </li>
+            </ul>
+		</div>
+	</nav>
+
+
+
+<h1>範例 : if...else</h1>
+<h4>長方形/正方形判斷 : <font color=gray>[if...else]</font> <a href=study5_ex1.html>[conditional operator]</a></h4>
+
+
+<table border=1 cellpadding = 10>
+
+<tr><th>說明</th><th>程式碼</th><th>流程圖</th><th>輸出&nbsp;&nbsp;&nbsp;&nbsp;</th</tr>
+<tr>
+<td>
+<span id=s0>宣告變數width, height, judge</span><br> 
+<span id=s1>設定width的值</span><br>
+<span id=s2>設定height的值</span><br>
+<span id=s3>判斷 width 是否等於 height</span></span><br>
+<span id=s4>若為true，judge = "正方形" </span><br>
+<span id=s5>若為false，judge = "長方形" </span><br>
+<span id=s6>輸出 judge </span><br>
+</td>
+
+
+<td>
+<span id=c0>int width, height, judge;</span><br>
+<span id=c1>width = </span><input type=text id='num1' size=3 value=10>;<br>
+<span id=c2>height = </span><input type=text id='num2' size=3 value=10>;<br>
+<span id=c3>if (width == height) </span> { <br>
+<span id=c4>&nbsp;&nbsp;&nbsp;&nbsp;judge = "正方形";</span><br>} <br>
+<span>else { </span><br>
+<span id=c5>&nbsp;&nbsp;&nbsp;&nbsp;judge = "長方形";</span><br>} <br>
+<span id=c6>printf(judge);</span><br>
+</td>
+
+
+<td>
+<canvas id='cs1' width='650' height='400'></canvas>
+</td>
+
+<td>
+<font size=5 color=red>
+<span id=outp></span>
+</font>
+</td>
+
+</tr>
+
+</table>
+
+
+<p>請選擇速度 : 
+<input type="radio" id="speed1" name="rate" value="1" checked > 快(1秒) 
+<input type="radio" id="speed2" name="rate" value="3"> 中(3秒) 
+<input type="radio" id="speed3" name="rate" value="5"> 慢(5秒) 
+<button onclick="getspeed();" id='b1'> 選擇速度 </button>
+</p>
+
+
+
+<button onclick="startTimer();" id='b2'> 自動播放 (animation) </button>
+<button onclick="startStep();" id='b3'> 逐步 (step by step) </button>
+<button onclick="clearAll();" id='b4'> 清除 (clear all) </button>
+
+
+
+<br><br><br>
+<button onclick='window.location="study2.html";'> 回上頁 (基本概念介紹) </button>
+
+
+
+
+</body>
+
+
+</html>

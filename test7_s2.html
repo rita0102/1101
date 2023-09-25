@@ -1,0 +1,134 @@
+<html>
+<title>測驗</title>
+
+<script>
+var sc = 0;
+var countW = 0;
+
+
+var ques = "", feedback = "";
+var userA = 0;
+var hints = ['注意if...else if...else', '比較i, j的大小', '如果i > j，執行 i = i + j', '如果i < j，執行 i = j * i', '如果皆不符合，執行 i = i / j']
+var hindex = -1;
+var i = 0, j = 0, ans;
+
+function showQ() {
+	document.getElementById('b3').disabled = true;
+	
+	i = parseInt(Math.random()*6);
+	j = parseInt(Math.random()*5) + 1;
+	ques = "int i = " + i + "; int j = " + j + ";<br>if (i > j) <br>&nbsp;&nbsp;&nbsp;&nbsp; i = i + j;<br>" 
+	+ "else if (i < j) <br>&nbsp;&nbsp;&nbsp;&nbsp; i = j * i;<br>" + "else <br>&nbsp;&nbsp;&nbsp;&nbsp; i = i / j;<br>" + "<br>請問 : i = ?";
+	document.getElementById('q1').innerHTML = ques;
+	
+	
+	if (i > j) ans = i + j;
+	else if (i < j) ans = j * i;
+	else ans = i / j;
+}
+
+
+
+function check() {
+	
+	userA = document.getElementById('inp').value;
+	if (userA == ans) {
+		document.getElementById('b1').disabled = true;
+		document.getElementById('b2').disabled = true;
+		
+		feedback = "正確";
+		document.getElementById('hint').innerHTML = feedback;
+		
+		if (countW == 0) sc = sc + 25;
+		else if (countW == 1) sc = sc + 20;
+		else if (countW == 2) sc = sc + 15;
+		else sc = sc + 10;
+		
+		document.getElementById('score').innerHTML = "目前得分 : <font color=green>" + sc + "</font>分";
+		
+		document.getElementById('b3').disabled = false;
+	}
+	else {
+		countW++;
+		hindex = (countW < hints.length) ? (hindex + 1) : 4;
+		document.getElementById('hint').innerHTML = hints[hindex];
+
+	}
+}
+
+
+
+function showhints() {
+	var h = "";
+	for (var i = 0; i < hints.length; i++) {
+		h = h + "<br>" + hints[i];
+	}
+	document.getElementById('hintALL').innerHTML = h;
+}
+
+
+
+function showA() {
+
+	document.getElementById('hint').innerHTML = "答案 : " + ans;
+	
+	document.getElementById('b1').disabled = true;
+	document.getElementById('b3').disabled = false;
+	
+	countW++;
+	
+}
+
+
+
+
+function next() {
+	localStorage.setItem("recordW1", countW);
+	localStorage.setItem("recordQ1", ques);
+	localStorage.setItem("recordA1", ans);
+	localStorage.setItem("s", sc);
+	window.location="test8_s3.html";
+}
+
+
+
+function help() {
+	localStorage.setItem("i", i);
+	localStorage.setItem("j", j);
+	
+	window.location="test7_s2_help.html";
+}
+
+</script>
+
+
+<body onload="showQ();">
+
+<table border=1>
+<tr>
+<td><font color=blue size=4><span id='q1'></span></font></td>
+</tr>
+</table>
+
+<br><br>
+i = <input type=text id='inp' style = 'font-size:.2in'>
+<br><br>
+
+<button onclick='check();' id='b1'>check</button><br><br><br>
+
+<p id='score'>目前得分 : </p><br><br>
+
+
+<font color=red><span id=hint></span></font><br><br>
+<button onclick='showhints();'>顯示全部提示</button><br>
+<font color=red><span id=hintALL></span></font>
+<br><br>
+
+<button onclick='showA();' id='b2'>略過</button>&nbsp;&nbsp;&nbsp;&nbsp;
+<button onclick='help();'>help me!</button><br><br>
+<button onclick='next();' id='b3'>下一題</button>
+
+</body>
+
+
+</html>

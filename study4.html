@@ -1,0 +1,118 @@
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>switch case</title>
+	<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/main.css">	
+	<script src="js/jquery-3.4.1.min.js"></script>
+	<script src="bootstrap/js/bootstrap.min.js"></script>
+</head>
+
+<script>
+
+//註解 break
+function hintBreak() {
+    document.getElementById('hbreak').innerHTML = "<br><br><hr><font size=4 color=blue>break</font><br>"
+ + "switch 中，在想要中斷的地方輸入 break;<br>就會直接結束。<br><br>"
+ + "switch 中，如果不寫 break，<br>一旦 case 相應的值成功，<br>就會直接向下執行其他 case 中的語句，"
+ + "<br>(不再進行 case 匹配)<br>直到遇到 break，或者 switch 語句結束。"
+}
+
+
+
+</script>
+
+
+
+<body>
+
+<!--導覽列-->
+    <nav style="background:#428bca" class="navbar navbar-expand-lg navbar-light">
+        <!--導覽列的頁首-->
+        <a class="navbar-brand" href="#" style="color:white">基本概念介紹</a>
+        <!--版型縮小後的Menu-->	  
+        <button class="navbar-toggler border-light bg-light" type="button" 
+	          data-toggle="collapse" data-target="#navbarNavDropdown" 
+	          aria-controls="navbarNavDropdown" aria-expanded="false" 
+			  aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+        </button>
+		
+		<!--導覽列的項目-->
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                <li class="nav-item active">
+                    <a class="nav-link" href="start.html">首頁<span class="sr-only">(current)</span></a>
+                </li>	
+				
+                <li class="nav-item">
+                    <a class="nav-link" href="study2.html" style="color:white">if、if...(else if)...else</a>
+                </li>
+				
+                <li class="nav-item">
+                    <a class="nav-link" href="study3.html" style="color:white">nested if</a>
+                </li>	
+				
+				<li class="nav-item">
+                    <a class="nav-link" href="study4.html" style="color:gray">switch case</a>
+                </li>
+				
+				<li class="nav-item">
+                    <a class="nav-link" href="study5.html" style="color:white">conditional operator</a>
+                </li>
+				
+				<li class="nav-item">
+                    <a class="nav-link" href="test6.html" style="color:white">測驗</a>
+                </li>
+            </ul>
+		</div>
+	</nav>
+
+
+<h1><font color=red><i>switch case</i></font></h1>
+
+<hr>
+
+
+
+
+<h2>[多重選擇結構]</h2>
+
+
+<h3><font color=orange>語法 : </font></h3>
+
+<font size=4>
+<font color=red>
+switch (變數或運算式) { <br>
+&nbsp;&nbsp;&nbsp;&nbsp;case 整數或字元 : <font color=black size=2>//case數量可自行增加</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;陳述句; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break; <font color=black size=2>//有沒有寫break會造成不同結果</font>
+<button onclick='hintBreak();'> 註解 : break </button><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color=black size=2>//default可以省略</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;default : <font color=black size=2>//沒有符合的整數或字元時執行</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color=black size=2>//條件判斷為true進入此區塊</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;陳述句; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;break; <font color=black size=2>//已經是最底了，所以有沒有寫break都一樣</font><br>
+} <br><br>
+</font>
+
+</font>
+
+<button onclick='window.location="study4_ex1.html";' style="background-color:green; color:white"> 範例 </button>
+
+<p id=hbreak></p>
+
+<hr>
+
+
+
+<br><br><br>
+
+<button onclick='window.location="study5.html";'> NEXT </button> conditional operator >>
+
+</body>
+
+</html>
