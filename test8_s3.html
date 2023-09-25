@@ -1,0 +1,140 @@
+<html>
+<title>測驗</title>
+
+<script>
+var countW = 0;
+var sc = parseInt(localStorage.getItem("s"));
+
+
+var ques = "", feedback = "";
+var userA = 0;
+var hints = ['注意nested if', 'a 是否大於 2', '如果為(a > 2)為true，判斷 b 是否大於 2', '如果(b > 2)為true，執行 a = a + b', '如果(b > 2)為false，輸出 b', '如果為(a > 2)為false，輸出 a']
+var hindex = -1;
+var a = 0, b = 0, ans;
+
+function showQ() {
+	document.getElementById('b3').disabled = true;
+	document.getElementById('score').innerHTML = "目前得分 : <font color=green>" + sc + "</font>分";
+	
+	a = parseInt(Math.random()*6);
+	b = parseInt(Math.random()*5);
+	ques = "int a = " + a + "; int b = " + b + ";<br>if (a > 2) {<br>&nbsp;&nbsp;&nbsp;&nbsp; if (b > 2) { <br>" 
+	+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a = a + b;<br>" + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;printf(a);<br>&nbsp;&nbsp;&nbsp;&nbsp;}<br>"
+	+ "&nbsp;&nbsp;&nbsp;&nbsp;else printf(b);<br>}<br>" + "else <br>&nbsp;&nbsp;&nbsp;&nbsp; printf(a);<br>" + "請問 : 輸出 = ?";
+	document.getElementById('q1').innerHTML = ques;
+	
+	
+	if (a > 2) {
+		if (b > 2) {
+			ans = a + b;
+		}
+		else ans = b;
+	}
+	else ans = a;
+}
+
+
+
+function check() {
+	
+	userA = document.getElementById('inp').value;
+	if (userA == ans) {
+		document.getElementById('b1').disabled = true;
+		document.getElementById('b2').disabled = true;
+		
+		feedback = "正確";
+		document.getElementById('hint').innerHTML = feedback;
+		
+		if (countW == 0) sc = sc + 25;
+		else if (countW == 1) sc = sc + 20;
+		else if (countW == 2) sc = sc + 15;
+		else sc = sc + 10;
+		
+		document.getElementById('score').innerHTML = "目前得分 : <font color=green>" + sc + "</font>分";
+		
+		document.getElementById('b3').disabled = false;
+	}
+	else {
+		countW++;
+		hindex = (countW < hints.length) ? (hindex + 1) : (hints.length - 1);
+		document.getElementById('hint').innerHTML = hints[hindex];
+	}
+}
+
+
+
+function showhints() {
+	var h = "";
+	for (var i = 0; i < hints.length; i++) {
+		h = h + "<br>" + hints[i];
+	}
+	document.getElementById('hintALL').innerHTML = h;
+}
+
+
+
+function showA() {
+	
+	document.getElementById('hint').innerHTML = "答案 : " + ans;
+	
+	document.getElementById('b1').disabled = true;
+	document.getElementById('b3').disabled = false;
+	
+	countW++;
+
+}
+
+
+
+function next() {
+	localStorage.setItem("recordW2", countW);
+	localStorage.setItem("recordQ2", ques);
+	localStorage.setItem("recordA2", ans);
+	localStorage.setItem("s", sc);
+	window.location="test9_s4.html";
+}
+
+
+
+function help() {
+	localStorage.setItem("a", a);
+	localStorage.setItem("b", b);
+	
+	window.location="test8_s3_help.html";
+}
+
+
+</script>
+
+
+
+<body onload="showQ();">
+
+<table border=1>
+<tr>
+<td><font color=blue size=4><span id='q1'></span></font></td>
+</tr>
+</table>
+
+<br><br>
+輸出 = <input type=text id='inp' style = 'font-size:.2in'>
+<br><br>
+
+<button onclick='check();' id='b1'>check</button><br><br><br>
+
+<p id='score'>目前得分 : </p><br><br>
+
+
+<font color=red><span id=hint></span></font><br><br>
+<button onclick='showhints();'>顯示全部提示</button><br>
+<font color=red><span id=hintALL></span></font>
+<br><br>
+
+<button onclick='showA();' id='b2'>略過</button>&nbsp;&nbsp;&nbsp;&nbsp;
+<button onclick='help();'>help me!</button><br><br>
+<button onclick='next();' id='b3'>下一題</button>
+
+
+</body>
+
+</html>

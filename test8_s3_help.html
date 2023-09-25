@@ -1,0 +1,244 @@
+<html>
+<title>測驗-help</title>
+
+<script>
+var a = parseInt(localStorage.getItem("a"));
+var b = parseInt(localStorage.getItem("b"));
+var ans = "";
+var stepid = ['s0', 's1', 's2', 's3', 's4', 's5', 's6'];
+var codeid = ['c0', 'c1', 'c2', 'c3', 'c4', 'c5', 'c6'];
+var rateid = ['speed1', 'speed2', 'speed3'];
+
+var nowStep = -1;
+var timerId;
+var rate = 1;
+
+
+function init() {
+	document.getElementById('num1').value = a;
+	document.getElementById('num2').value = b;
+}
+
+
+
+//答案
+function ansN() {
+	
+	if (a > 2) {
+		if (b > 2) {
+			ans = a + b;
+		}
+		else ans = b;
+	}
+	else
+		ans = a;
+	
+	document.getElementById('outp').innerHTML = ans;
+}
+
+
+
+//取得速度
+function getspeed() {
+	for (var i = 0; i <= 2; i++) {
+		if (document.getElementById(rateid[i]).checked)
+			rate = parseInt(document.getElementById(rateid[i]).value);
+	}
+}
+
+
+
+//計時器開始
+function startTimer() {
+	ansN();
+	document.getElementById('b2').disabled = true;
+	timerId = window.setInterval("autoshow();", rate*1000);
+}
+
+
+
+//計時器清除
+function resetTimer() {
+	window.clearInterval(timerId);  
+	rate = 1;
+}
+
+
+
+//顯示
+function stepShow() {
+	if (nowStep == codeid.length)
+		wordColor(nowStep - 1, -1);
+	else if (nowStep == -1) {
+		wordColor(-1, 0);
+		nowStep = 0;
+	}
+	else
+		wordColor(nowStep - 1, nowStep);
+		
+	if (nowStep < 7) {
+		wordColor(nowStep - 1, nowStep);
+		switch (nowStep) {
+		case 1:
+			if (a > 2) nowStep = 2;
+			else nowStep = 6;
+			break;
+		case 2:
+			if (b > 2) nowStep = 3;
+			else nowStep = 5;
+			break;
+		case 4:
+			nowStep = 7;
+			break;
+		case 5:
+			wordColor(2, nowStep);
+			nowStep = 7;
+			break;
+		case 6:
+			wordColor(1, nowStep);
+			nowStep = 7;
+			break;
+		default:
+			nowStep++;
+		}
+	}
+}
+
+
+
+//自動
+function autoshow() {
+	if (nowStep < codeid.length)
+		stepShow();
+	else {
+		resetTimer();
+		clearAll();
+	}
+}
+
+
+
+//逐步
+function startStep() {
+	window.clearInterval(timerId);  
+	clearAllColor();
+	ansN();
+	
+	document.getElementById('b2').disabled = true;
+	
+	stepShow();
+	
+	if (nowStep == codeid.length)
+		document.getElementById('b3').disabled = true;
+}
+
+
+
+//文字顏色
+function wordColor(pre,current) {
+	if (pre != -1) { 
+		document.getElementById(stepid[pre]).style.color = "black";
+		document.getElementById(stepid[pre]).style.background = "white";  
+		document.getElementById(codeid[pre]).style.color = "black";
+		document.getElementById(codeid[pre]).style.background = "white"; 
+	}
+	if (current != -1) { 
+		document.getElementById(stepid[current]).style.color = "red";
+		document.getElementById(stepid[current]).style.background = "yellow"; 
+		document.getElementById(codeid[current]).style.color = "red";
+		document.getElementById(codeid[current]).style.background = "yellow";    
+	}
+}
+
+
+
+//清除全部顏色
+function clearAllColor() {
+	for (var n = 0; n < 7; n++) {
+		document.getElementById(stepid[n]).style.color = "black";
+		document.getElementById(stepid[n]).style.background = "white";  
+		document.getElementById(codeid[n]).style.color = "black";
+		document.getElementById(codeid[n]).style.background = "white"; 
+	}
+}
+
+
+
+//清除
+function clearAll() {
+	document.getElementById('b2').disabled = false;
+	document.getElementById('b3').disabled = false;
+	
+	document.getElementById('outp').innerHTML = "";
+	
+	nowStep = -1;
+	rate = 1;
+	document.getElementById('speed1').checked = true;
+	clearAllColor();
+	resetTimer();
+}
+
+
+</script>
+
+
+<body onload=init();>
+<table border=1 cellpadding = 10>
+
+<tr><th>說明</th><th>程式碼</th></tr>
+<tr>
+<td>
+<span id=s0>宣告變數a, b</span><br> 
+<span id=s1>判斷 a 是否大於 2</span><br>
+<span id=s2>如果(a &gt; 2)為true，判斷 b 是否大於 2 </span><br>
+<span id=s3>&nbsp;&nbsp;&nbsp;&nbsp;如果(b &gt; 2)為true，執行 a = a + b</span>，
+<span id=s4>輸出 : a</span><br>
+<span id=s5>&nbsp;&nbsp;&nbsp;&nbsp;若(b &gt; 2)為false，輸出 : b</span><br>
+<span id=s6>如果(a &gt; 2)為false，輸出 : a</span><br>
+</td>
+
+<td>
+<span id=c0>int a = <input type=text id='num1' size=3 disabled>; int b = <input type=text id='num2' size=3 disabled>;</span><br>
+<span id=c1>if (a &gt; 2) { </span><br>
+<span id=c2>&nbsp;&nbsp;&nbsp;&nbsp; if (b &gt; 2) { </span><br>
+<span id=c3>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; a = a + b;</span><br>
+<span id=c4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; printf(a); </span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+<span id=c5>&nbsp;&nbsp;&nbsp;&nbsp; else printf(b); </span><br>}<br>
+<span>else</span><br>
+<span id=c6>&nbsp;&nbsp;&nbsp;&nbsp; printf(a); </span><br>
+</td>
+
+
+</tr>
+
+</table>
+
+
+<p>請選擇速度 : 
+<input type="radio" id="speed1" name="rate" value="1" checked > 快(1秒) 
+<input type="radio" id="speed2" name="rate" value="3"> 中(3秒) 
+<input type="radio" id="speed3" name="rate" value="5"> 慢(5秒) 
+<button onclick="getspeed();" id='b1'> 選擇速度 </button>
+</p>
+
+
+
+<button onclick="startTimer();" id='b2'> 自動播放 (animation) </button>
+<button onclick="startStep();" id='b3'> 逐步 (step by step) </button>
+<button onclick="clearAll();" id='b4'> 清除 (clear all) </button>
+
+
+<p>
+<font size=5 color=red bgcolor=yellow>
+<span id=outp></span>
+</font>
+</p>
+
+<br><br><br>
+<button onclick='window.location="test8_s3.html";'> 回上頁 </button>
+
+
+</body>
+
+</html>
